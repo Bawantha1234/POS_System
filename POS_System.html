@@ -266,5 +266,49 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="input-container mt-3">
+                                <input style="width: 50%" type="number" name="qtyBought" placeholder="--">
+
+                                <label>QTY</label>
+
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <button id="btnAddToCart" type="button" class="btnAddToCart">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" viewBox="0 0 20 20" height="20" fill="none" class="svg-icon"><g stroke-width="1.5" stroke-linecap="round" stroke="#de8a2a"><circle r="7.5" cy="10" cx="10"></circle><path d="m9.99998 7.5v5"></path><path d="m7.5 9.99998h5"></path></g></svg>
+                                <span class="lable">Add</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-3 ms-5">
+                <div>
+                    <div class="total mt-5">
+                        <div class="background">
+                            <h3>TOTAL : </h3>
+                            <h3 id="total">--.--</h3>
+                        </div>
+                    </div>
+                    <div class="discount mt-5">
+                        <div class="background">
+                            <h3>DISCOUNT : </h3>
+                            <h3 id="discount">--.--</h3>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <button id="btnPlaceOrder" class="btnPayOut">Pay
+                            <svg class="svgIcon" viewBox="0 0 576 512">
+                                <path d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 </html>
