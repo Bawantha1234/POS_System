@@ -51,6 +51,27 @@
             transform: translate3d(0, 0, 0) scale(0.95);
             filter: blur(20px);
         }
+        .heading {
+            font-size: 20px;
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+        .card p:not(.heading) {
+            font-size: 14px;
+        }
+
+        .card p:last-child {
+            color: #e81cff;
+            font-weight: 600;
+        }
+
+        .card:hover::after {
+            filter: blur(30px);
+        }
+
+        .card:hover::before {
+            /* //transform: rotate(-180deg);*/
+        }
 
     </style>
 </head>
