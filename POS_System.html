@@ -373,6 +373,48 @@
         .background h3 {
             display: inline-block;
         }
+
+
+        @keyframes move {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes box {
+            0% {
+                box-shadow: #27272c;
+            }
+            50% {
+                box-shadow: 0 0 25px var(--clr);
+            }
+            100% {
+                box-shadow: #27272c;
+            }
+        }
+
+
+        .radio {
+            color: white;
+        }
+        option {
+            background: #1C1A32;
+            color: white;
+        }
+        select {
+            color: white !important;
+        }
+        body > div {
+            height: max-content;
+        }
+
+
     </style>
 </head>
 <body>
