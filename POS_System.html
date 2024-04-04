@@ -30,5 +30,53 @@
         </nav>
     </div>
 </header>
+
+<div id="dashboard" class="mt-5 show">
+    <div class="container shadow-lg con-750">
+        <div class="media row">
+            <div class="col-8 dashboard-clock-and-details">
+                <div class="row center-clock">
+                    <div class="col-5">
+                        <div class="center">
+                            <canvas id="clock"></canvas>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="center">
+                            <canvas id="chart2"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="row center-clock">
+                    <div class="col-4 count-label">
+                        <div class="orderCount top-card card">
+                            <div class="text">
+                                <h5>ORDER COUNT FOR THIS MONTH</h5>
+                                <h5 id="orderCount">--</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 count-label">
+                        <div class="orderCount top-card card">
+                            <div class="text">
+                                <h5>Registered Customer Count</h5>
+                                <h5 id="customerCount">--</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4 center-chart">
+                <div>
+                    <canvas id="myChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
 </body>
 </html>
