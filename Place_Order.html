@@ -2,16 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="icon" href="assert/webicon.png">
-    <meta property="og:image" itemprop="image"  content="https://i.ibb.co/nc8kydD/modi.png">
-    <meta property="og:site_name" content="Web Application Frontend">
-    <meta property="og:title" content="Web Application" />
-    <meta property="og:description" content="This Fronted Program was created for testing perpose" />
-    <meta property="og:type" content="website" />
-    <title>Web App</title>
+    <title>Place Order</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
@@ -194,11 +185,11 @@
         }
 
         header {
-              position: relative;
-              width: 100%;
-              height: 30px;
-              z-index: 1000;
-          }
+            position: relative;
+            width: 100%;
+            height: 30px;
+            z-index: 1000;
+        }
 
 
         .navBar {
@@ -430,7 +421,7 @@
         }
 
         #manageCustomer, #dashboard, #manageItem, #placeOrder {
-            <!--display: none;-->
+        <!--display: none;-->
             padding-top: 65px;
             height: max-content;
         }
@@ -495,7 +486,6 @@
     </style>
 
 </head>
-
 <body>
 
 <!--Navigation Bar-->
@@ -505,198 +495,15 @@
             <i class='bx bxs-wink-smile'></i>
         </div>
         <nav class="nav-items">
-
-            <span id="nav-Dashboard" class="nav-link active" aria-current="page" href="#" >Dashboard</span>
-            <span id="nav-CustomerMan" class="nav-link">Customer Manage</span>
-            <span id="nav-ItemMan" class="nav-link">Item Manage</span>
-            <span id="nav-PlaceOrder" class="nav-link" href="#" >Place Order</span>
-
+            <div><i class='bx bx-home-alt-2'></i><a href="#dashboard">DashBoard</a></div>
+            <div><i class='bx bx-user'></i><a href="#manageCustomer">Customer Manage</a></div>
+            <div><i class='bx bx-category-alt'></i><a href="#manageItem">Item Manage</a></div>
+            <div><i class='bx bxs-shopping-bags' style='color:#ffffff'></i><a href="#placeOrder">Place Order</a></div>
         </nav>
     </div>
 </header>
 
-<!--Dashboard-->
-<section id="dashboard-section">
-<div id="dashboard" class="mt-5 show">
-    <div class="container shadow-lg con-750">
-        <div class="media row">
-            <div class="col-8 dashboard-clock-and-details">
-                <div class="row center-clock">
-                    <div class="col-5">
-                        <div class="center">
-                            <canvas id="clock"></canvas>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="center">
-                            <canvas id="chart2"></canvas>
-                        </div>
-                    </div>
-                </div>
-                <div class="row center-clock">
-                    <div class="col-4 count-label">
-                        <div class="orderCount top-card card">
-                            <div class="text">
-                                <h5>ORDER COUNT FOR THIS MONTH</h5>
-                                <h5 id="orderCount">--</h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-4 count-label">
-                        <div class="orderCount top-card card">
-                            <div class="text">
-                                <h5>Registered Customer Count</h5>
-                                <h5 id="customerCount">--</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 center-chart">
-                <div>
-                    <canvas id="myChart"></canvas>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-</div>
-</section>
-
-<!--Manage Customer-->
-<section id ="managecustomer-section">
-<div id="manageCustomer">
-    <div class="container shadow-lg">
-        <div class="row">
-            <div class="col-5">
-                <div class="textFields">
-                    <div class="input-container">
-                        <input id="cust-id" type="number" placeholder="**" name="id" >
-                        <label for="cust-id">Id</label>
-                    </div>
-                    <div class="input-container">
-                        <input id="cust-name" type="text" placeholder="Bawantha Bandara" name="name">
-                        <label for="cust-name">Name</label>
-                    </div>
-                    <div class="input-container">
-                        <input id="cust-address" type="text" placeholder="183/b16/4c Bellanthudhawa,raigama,bandaragama"
-                               name="address">
-                        <label for="cust-address">Address</label>
-                    </div>
-                    <div class="input-container">
-                        <input id="cust-contact" type="text" placeholder="+94 ** *** ****" name="contact">
-                        <label for="cust-contact">Mobile NO</label>
-                    </div>
-                    <div class="input-container">
-                        <input id="cust-birthDay" type="date" placeholder="Birth Day" name="birthDay">
-                        <label for="cust-birthDay">Birthday</label>
-                    </div>
-                    <div class="gender">
-                        <div class="radio"><input type="radio" name="radio" value="male">Male</div>
-                        <div class="radio"><input type="radio" name="radio" value="female">Female</div>
-                    </div>
-                </div>
-                <div class="buttons">
-                    <button id="customer-add" class="button" style="--clr:#FF44CC"><span>ADD</span><i></i></button>
-                    <button id="customer-search" class="button" style="--clr:#0FF0FC"><span>SEARCH</span><i></i></button>
-                    <br>
-                    <button id="customer-update" class="button" style="--clr:#39FF14"><span>UPDATE</span><i></i></button>
-                    <button id="customer-delete" class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
-                </div>
-            </div>
-            <div class="col-6" style=" height: 411px;overflow: overlay">
-                <div class="mt-5">
-                    <table class="table table-dark table-hover">
-                        <thead class="tableHead">
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Contact</th>
-                            <th>Address</th>
-                            <th>Birthday</th>
-                            <th>Gender</th>
-                        </tr>
-                        </thead>
-                        <tbody  id="cust-table" class="tableBody">
-                        <tr>
-                            <td>01</td>
-                            <td>Pasindu</td>
-                            <td>078719579</td>
-                            <td>Habarana</td>
-                            <td>2002-10-08</td>
-                            <td>Male</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
-
-<!--Manage Item-->
-<section id ="manageitem-section">
-<div id="manageItem">
-    <div class="container shadow-lg">
-        <div class="row">
-            <div class="col-5">
-                <div class="textFields ">
-                    <div class="input-container">
-                        <input type="text" id="itemCode" placeholder="I-****">
-                        <label for="itemCode">Item Code</label>
-                    </div>
-                    <div class="input-container">
-                        <input type="text" id="itemName" placeholder="example">
-                        <label for="itemName">Item Name</label>
-                    </div>
-                    <div class="input-container">
-                        <input type="number" id="itemPrice" placeholder="0000.00">
-                        <label for="itemPrice">Item Price</label>
-                    </div>
-                    <div class="input-container">
-                        <input type="number" id="itemQty" placeholder="00">
-                        <label for="itemQty">Item QTY</label>
-                    </div>
-                </div>
-                <div class="buttons">
-                    <button class="button" style="--clr:#FF44CC"><span>ADD</span><i></i></button>
-                    <button class="button" style="--clr:#0FF0FC"><span>SEARCH</span><i></i></button>
-                    <br>
-                    <button class="button" style="--clr:#39FF14"><span>UPDATE</span><i></i></button>
-                    <button class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
-                </div>
-            </div>
-            <div class="col-6" style="height: 411px;overflow: overlay">
-                <div class="mt-5">
-                    <table class="table table-dark table-hover">
-                        <thead>
-                        <tr>
-                            <td>Item Code</td>
-                            <td>Item Name</td>
-                            <td>Item Price</td>
-                            <td>Item QTY</td>
-                        </tr>
-                        </thead>
-                        <tbody style="overflow: scroll">
-                        <tr>
-                            <td>I-001</td>
-                            <td>Test Name</td>
-                            <td>Test Price</td>
-                            <td>Test QTY</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</section>
-
 <!--Place Order-->
-<section id ="placeorder-section">
 <div id="placeOrder">
     <div class="container shadow-lg">
         <div class="row">
@@ -835,144 +642,6 @@
         </div>
     </div>
 </div>
-</section>
-
-<script src="assert/lib/jquery-3.7.1.js"></script>
-
-<script>
-
-    var customers =[];
-    var recordIndex;
-
-    $('#dashboard-section').css({display: 'block'});
-    $('#managecustomer-section').css({display: 'none'});
-    $('#manageitem-section').css({display: 'none'});
-    $('#placeorder-section').css({display: 'none'});
-
-    //Dashboard
-    $('#nav-Dashboard').on('click',()=>{
-        $('#dashboard-section').css({display: 'block'});
-        $('#managecustomer-section').css({display: 'none'});
-        $('#manageitem-section').css({display: 'none'});
-        $('#placeorder-section').css({display: 'none'});
-    });
-
-    //Manage Customer
-    $('#nav-CustomerMan').on('click',()=>{
-        $('#dashboard-section').css({display: 'none'});
-        $('#managecustomer-section').css({display: 'block'});
-        $('#manageitem-section').css({display: 'none'});
-        $('#placeorder-section').css({display: 'none'});
-    });
-
-    //Manage Items
-    $('#nav-ItemMan').on('click',()=>{
-        $('#dashboard-section').css({display: 'none'});
-        $('#managecustomer-section').css({display: 'none'});
-        $('#manageitem-section').css({display: 'block'});
-        $('#placeorder-section').css({display: 'none'});
-    });
-
-    //Place Order
-    $('#nav-PlaceOrder').on('click',()=>{
-        $('#dashboard-section').css({display: 'none'});
-        $('#managecustomer-section').css({display: 'none'});
-        $('#manageitem-section').css({display: 'none'});
-        $('#placeorder-section').css({display: 'block'});
-    });
-
-
-    function loadTable() {
-
-        $("#cust-table").empty();
-
-        customers.map((item, index) => {
-            let record = `<tr>
-                <td class="customer-id-value">${item.Id}</td>
-                <td class="customer-name-value">${item.Name}</td>
-                <td class="customer-mobile-value">${item.Mobile}</td>
-                <td class="customer-address-value">${item.Address}</td>
-                <td class="customer-birthday-value">${item.Birthday}</td>
-                <td class="student-program-value">${item.Program}</td>
-            </tr>`;
-            $("#cust-table").append(record);
-        });
-    }
-
-
-
-    $('#customer-add').on('click',()=>{
-
-        //customer id
-        var customerId = $('#cust-id').val();
-
-        //customer name
-        var customerName = $('#cust-name').val();
-
-        //customer adress
-        var customerAddress = $('#cust-address').val();
-
-        //customer mobile
-        var customerMobile = $('#cust-contact').val();
-
-        //customer birthday
-        var customerBirthday = $('#cust-birthDay').val()
-
-        //Male/Female
-        var customerProgram = $('input[name="radio"]:checked').val();
-
-
-        console.log("custId :",customerId);
-        console.log("custName :",customerName);
-        console.log("custAddress:",customerAddress);
-        console.log("custMobile:",customerMobile);
-        console.log("custBirthday :",customerBirthday);
-        console.log("Male/Female :",customerProgram);
-
-        // create an object
-        let customer = {
-            Id: customerId,
-            Name: customerName,
-            Mobile: customerMobile,
-            Address: customerAddress,
-            Birthday: customerBirthday,
-            Program: customerProgram
-        }
-        // push to the array
-        customers.push(customer);
-
-        loadTable();
-        $("#customer-update").click();
-
-
-    });
-
-
-    $("#customer-update").on('click', () => {
-        var customerId = $('#cust-id').val();
-        var customerName = $('#cust-name').val();
-        var customerAddress = $('#cust-address').val();
-        var customerMobile = $('#cust-contact').val();
-        var customerBirthday = $('#cust-birthDay').val()
-        var customerProgram = $('input[name="radio"]:checked').val();
-
-        let customerObj = customers[recordIndex];
-        // let customerObj = {...customers[recordIndex]}; // clone object
-        customerObj.Id = customerId;
-        customerObj.Name = customerName;
-        customerObj.Mobile = customerMobile;
-        customerObj.Address = customerAddress;
-        customerObj.Birthday = customerBirthday;
-        customerObj.Program = customerProgram;
-
-        // console.log("S1: ", studentObj);
-        // console.log("S2: ", students[recordIndex]);
-
-        loadTable();
-        $("#customer-update").click();
-    });
-
-</script>
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"

@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Item Manage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+
+        .card{
+            position: relative;
+            width: 190px;
+            height: 254px;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            padding: 12px;
+            gap: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            color: aquamarine;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            margin: auto;
+            border-radius: 10px;
+            background: linear-gradient(-45deg, #e81cff 0%, #40c9ff 100%);
+            z-index: -10;
+            pointer-events: none;
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card::after {
+            content: "";
+            z-index: -1;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(-45deg, #fc00ff 0%, #00dbde 100%);
+            transform: translate3d(0, 0, 0) scale(0.95);
+            filter: blur(20px);
+        }
+
+
+        .heading {
+            font-size: 20px;
+            text-transform: capitalize;
+            font-weight: 700;
+        }
+
+
+        .card p:not(.heading) {
+            font-size: 14px;
+        }
+
+        .card p:last-child {
+            color: #e81cff;
+            font-weight: 600;
+        }
+
+        .card:hover::after {
+            filter: blur(30px);
+        }
+
+        .btnPayOut {
+            width: 130px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(15, 15, 15);
+            border: none;
+            color: white;
+            font-weight: 600;
+            gap: 8px;
+            cursor: pointer;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.103);
+            position: relative;
+            overflow: hidden;
+            transition-duration: .3s;
+        }
+        .btnPayOut .svgIcon {
+            width: 16px;
+        }
+
+        .btnPayOut .svgIcon path {
+            fill: white;
+        }
+
+        .btnPayOut::before {
+            width: 130px;
+            height: 130px;
+            position: absolute;
+            content: "";
+            background-color: white;
+            border-radius: 50%;
+            left: -100%;
+            top: 0;
+            transition-duration: .3s;
+            mix-blend-mode: difference;
+        }
+
+        .btnPayOut:hover::before {
+            transition-duration: .3s;
+            transform: translate(100%, -50%);
+            border-radius: 0;
+        }
+
+        .btnPayOut:active {
+            transform: translate(5px, 5px);
+            transition-duration: .3s;
+        }
+
+
+        .btnAddToCart{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 6px 12px;
+            gap: 4px;
+            height: 32px;
+            width: 81px;
+            border: none;
+            background: #1b1b1cd0;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .btnAddToCart .lable {
+            line-height: 22px;
+            font-size: 17px;
+            color: #ffffff;
+            font-family: sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .svg-icon {
+            fill: white;
+        }
+
+        .btnAddToCart:hover {
+            background: #1b1b1cea;
+        }
+
+        .btnAddToCart:hover .svg-icon {
+            animation: rotate 1.3s linear infinite;
+        }
+
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            25% {
+                transform: rotate(10deg);
+            }
+
+            50% {
+                transform: rotate(0deg);
+            }
+
+            75% {
+                transform: rotate(-10deg);
+            }
+
+            100% {
+                transform: rotate(0deg);
+            }
+        }
+
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            background-color: #1C1A32;
+            color: white;
+            margin: 0;
+        }
+
+        header {
+            position: relative;
+            width: 100%;
+            height: 30px;
+            z-index: 1000;
+        }
+
+
+        .navBar {
+            display: flex;
+            background: #0c3f65;
+            flex-direction: row;
+            align-items: flex-end;
+            justify-content: space-between;
+            position: fixed;
+            width: 100%;
+            box-shadow: rgba(251, 250, 252, 0.19) 0px 10px 20px, rgba(247, 246, 248, 0.23) 0px 6px 6px;
+        }
+        .nav-items {
+            width: 50%;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .nav-items div {
+            margin: 10px;
+        }
+        .nav-items a {
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .logo {
+            width: 50px;
+            height: 35px;
+        }
+
+
+        #manageCustomer {
+            display: flex;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+        .textFields {
+            margin: 50px;
+            display: flex;
+            flex-direction: column;
+        }
+        .textFields > div {
+            margin: 7px;
+            position: relative;
+        }
+        .textFields input[type='text'] {
+            width: 100%;
+        }
+        .textFields > div > div {
+            display: inline-block;
+        }
+
+
+        .buttons {
+            margin: 0 50px;
+        }
+        .buttons button {
+            margin: 20px;
+            width: 93px;
+            height: 34px;
+        }
+
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+        .input-container label {
+            position: absolute;
+            top: -12px;
+            left: 0px;
+            font-size: 12px;
+            color: #fff;
+            pointer-event: none;
+            transition: all 0.5s ease-in-out;
+        }
+        .input-container input {
+            border: 0;
+            border-bottom: 1px solid #555;
+            background: transparent;
+            width: 100%;
+            padding: 8px 0 5px 0;
+            font-size: 16px;
+            color: #fff;
+        }
+        .input-container input:last-child {
+            width: 50%;
+        }
+        .input-container input:focus {
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #64ffeb;
+        }
+        .input-container input:focus ~ label,
+        .input-container input:valid ~ label {
+            top: -12px;
+            font-size: 12px;
+        }
+
+
+        .button {
+            position: relative;
+            background: #444;
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            border: none;
+            letter-spacing: 0.1rem;
+            font-size: 1rem;
+            transition: 0.2s;
+        }
+        .button:hover {
+            letter-spacing: 0.2rem;
+            background: var(--clr);
+            color: var(--clr);
+            animation: box 3s infinite;
+        }
+        .button::before {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            background: #272822;
+        }
+        .button span {
+            position: relative;
+            z-index: 1;
+        }
+        .button i {
+            position: absolute;
+            inset: 0;
+            display: block;
+        }
+        .button i::before {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            left: 80%;
+            top: -2px;
+            border: 2px solid var(--clr);
+            background: #272822;
+            transition: 0.2s;
+        }
+        .button:hover i::before {
+            width: 15px;
+            left: 20%;
+            animation: move 3s infinite;
+        }
+        .button i::after {
+            content: "";
+            position: absolute;
+            width: 10px;
+            height: 2px;
+            left: 20%;
+            bottom: -2px;
+            border: 2px solid var(--clr);
+            background: #272822;
+            transition: 0.2s;
+        }
+        .button:hover i::after {
+            width: 15px;
+            left: 60%;
+            animation: move 3s infinite;
+        }
+        .background h3 {
+            display: inline-block;
+        }
+
+
+        @keyframes move {
+            0% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(5px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes box {
+            0% {
+                box-shadow: #27272c;
+            }
+            50% {
+                box-shadow: 0 0 25px var(--clr);
+            }
+            100% {
+                box-shadow: #27272c;
+            }
+        }
+
+
+        .radio {
+            color: white;
+        }
+        option {
+            background: #1C1A32;
+            color: white;
+        }
+        select {
+            color: white !important;
+        }
+        body > div {
+            height: max-content;
+        }
+        .top-card {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .top-card .text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+
+        .center {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #manageCustomer, #dashboard, #manageItem, #placeOrder {
+        <!--display: none;-->
+            padding-top: 65px;
+            height: max-content;
+        }
+        .show {
+            display: flex !important;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+        }
+        .center-clock {
+            justify-content: center;
+            position: relative;
+        }
+
+        .dashboard-clock-and-details {
+            display: flex;
+            flex-direction: column;
+            height: 73vh;
+            justify-content: space-around;
+        }
+        .center-chart{
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+
+        @media all and (max-width:750px) {
+            .media{
+                flex-direction: column;
+                align-items: center;
+            }
+            .center-chart{
+                height: 300px;
+                width: 300px;
+            }
+            .dashboard-clock-and-details{
+                width: 100%;
+            }
+            .con-750{
+                align-items: center;
+            }
+            .count-label{
+                width: 47.3333%;
+            }
+        }
+        div a{
+            color: white;
+            font-size: 18px;
+            font-weight: lighter;
+            margin-right: 25px;
+            text-decoration: #0c3f65;
+
+        }
+        div a:hover{
+            color: #2F8FFF;
+        }
+        div>nav{
+            list-style:none;
+            display: inline-block;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<!--Navigation Bar-->
+<header>
+    <div class="navBar">
+        <div class="logo">
+            <i class='bx bxs-wink-smile'></i>
+        </div>
+        <nav class="nav-items">
+            <div><i class='bx bx-home-alt-2'></i><a href="#dashboard">DashBoard</a></div>
+            <div><i class='bx bx-user'></i><a href="#manageCustomer">Customer Manage</a></div>
+            <div><i class='bx bx-category-alt'></i><a href="#manageItem">Item Manage</a></div>
+            <div><i class='bx bxs-shopping-bags' style='color:#ffffff'></i><a href="#placeOrder">Place Order</a></div>
+        </nav>
+    </div>
+</header>
+
+<!--Manage Item-->
+<div id="manageItem">
+    <div class="container shadow-lg">
+        <div class="row">
+            <div class="col-5">
+                <div class="textFields ">
+                    <div class="input-container">
+                        <input type="text" id="itemCode" placeholder="I-****">
+                        <label for="itemCode">Item Code</label>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" id="itemName" placeholder="example">
+                        <label for="itemName">Item Name</label>
+                    </div>
+                    <div class="input-container">
+                        <input type="number" id="itemPrice" placeholder="0000.00">
+                        <label for="itemPrice">Item Price</label>
+                    </div>
+                    <div class="input-container">
+                        <input type="number" id="itemQty" placeholder="00">
+                        <label for="itemQty">Item QTY</label>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="button" style="--clr:#FF44CC"><span>ADD</span><i></i></button>
+                    <button class="button" style="--clr:#0FF0FC"><span>SEARCH</span><i></i></button>
+                    <br>
+                    <button class="button" style="--clr:#39FF14"><span>UPDATE</span><i></i></button>
+                    <button class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
+                </div>
+            </div>
+            <div class="col-6" style="height: 411px;overflow: overlay">
+                <div class="mt-5">
+                    <table class="table table-dark table-hover">
+                        <thead>
+                        <tr>
+                            <td>Item Code</td>
+                            <td>Item Name</td>
+                            <td>Item Price</td>
+                            <td>Item QTY</td>
+                        </tr>
+                        </thead>
+                        <tbody style="overflow: scroll">
+                        <tr>
+                            <td>I-001</td>
+                            <td>Test Name</td>
+                            <td>Test Price</td>
+                            <td>Test QTY</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="lib/jquery-3.6.4.min.js"></script>
+</body>
+</html>
