@@ -3,42 +3,6 @@
     var customers =[];
     var recordIndex;
 
-    $('#dashboard-section').css({display: 'block'});
-    $('#managecustomer-section').css({display: 'none'});
-    $('#manageitem-section').css({display: 'none'});
-    $('#placeorder-section').css({display: 'none'});
-
-    //Dashboard
-    $('#nav-Dashboard').on('click',()=>{
-    $('#dashboard-section').css({display: 'block'});
-    $('#managecustomer-section').css({display: 'none'});
-    $('#manageitem-section').css({display: 'none'});
-    $('#placeorder-section').css({display: 'none'});
-});
-
-    //Manage Customer
-    $('#nav-CustomerMan').on('click',()=>{
-    $('#dashboard-section').css({display: 'none'});
-    $('#managecustomer-section').css({display: 'block'});
-    $('#manageitem-section').css({display: 'none'});
-    $('#placeorder-section').css({display: 'none'});
-});
-
-    //Manage Items
-    $('#nav-ItemMan').on('click',()=>{
-    $('#dashboard-section').css({display: 'none'});
-    $('#managecustomer-section').css({display: 'none'});
-    $('#manageitem-section').css({display: 'block'});
-    $('#placeorder-section').css({display: 'none'});
-});
-
-    //Place Order
-    $('#nav-PlaceOrder').on('click',()=>{
-    $('#dashboard-section').css({display: 'none'});
-    $('#managecustomer-section').css({display: 'none'});
-    $('#manageitem-section').css({display: 'none'});
-    $('#placeorder-section').css({display: 'block'});
-});
 
 
     function loadTable() {
