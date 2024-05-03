@@ -603,6 +603,7 @@
                     <br>
                     <button id="customer-update" class="button" style="--clr:#39FF14"><span>UPDATE</span><i></i></button>
                     <button id="customer-delete" class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
+                    <button id="customer-reset" class="button" style="--clr:#8A2BE2"><span>RESET</span><i></i></button>
                 </div>
             </div>
             <div class="col-6" style=" height: 411px;overflow: overlay">
@@ -900,7 +901,7 @@
     }
 
 
-
+//customer Add
     $('#customer-add').on('click',()=>{
 
         //customer id
@@ -942,12 +943,12 @@
         customers.push(customer);
 
         loadTable();
-        $("#customer-update").click();
+        $("#customer-reset").click();
 
 
     });
 
-
+//customer update
     $("#customer-update").on('click', () => {
         var customerId = $('#cust-id').val();
         var customerName = $('#cust-name').val();
@@ -969,9 +970,39 @@
         // console.log("S2: ", students[recordIndex]);
 
         loadTable();
-        $("#customer-update").click();
+        $("#customer-reset").click();
     });
 
+    //customer Delete
+    $("#customer-delete").on('click', () => {
+        customers.splice(recordIndex, 1);
+        loadTable();
+        $("#customer-reset").click();
+    });
+
+
+    $("#cust-table").on('click', 'tr', function() {
+        let index = $(this).index();
+        recordIndex = index;
+
+        console.log("index: ", index);
+
+        let id = $(this).find(".customer-id-value").text();
+        let name = $(this).find(".customer-name-value").text();
+        let mobile = $(this).find(".customer-mobile-value").text();
+        let address = $(this).find(".customer-address-value").text();
+        let birthday = $(this).find(".customer-birthday-value").text();
+        let program = $(this).find(".student-program-value").text();
+
+
+        $("#cust-id").val(id);
+        $("#cust-name").val(name);
+        $("#cust-contact").val(mobile);
+        $("#cust-birthDay").val(birthday);
+        $("#cust-address").val(address);
+        $(input[name="radio"][value = {program}]).prop('checked', true);
+
+    })
 </script>
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
