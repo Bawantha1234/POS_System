@@ -67,15 +67,11 @@ $("#item-update").on('click', () => {
 
 
     let itemObj = items[recordIndex];
-    // let customerObj = {...customers[recordIndex]}; // clone object
+    // let itemObj = {...items[recordIndex]}; // clone object
     itemObj.Id = itemCode;
     itemObj.Name = itemName;
     itemObj.Price = itemPrice;
     itemObj.Qty = itemQty;
-
-
-    // console.log("S1: ", studentObj);
-    // console.log("S2: ", students[recordIndex]);
 
     loadTable();
     $("#item-reset").click();
