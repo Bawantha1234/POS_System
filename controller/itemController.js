@@ -1,0 +1,270 @@
+
+
+var items =[];
+var recordIndex;
+
+function loadTable() {
+
+    $("#item-table").empty();
+
+    items.map((item, index) => {
+        let record = `<tr>
+                <td class="item-code-value">${item.Id}</td>
+                <td class="item-name-value">${item.Name}</td>
+                <td class="item-price-value">${item.Price}</td>
+                <td class="item-qty-value">${item.Qty}</td>
+            </tr>`;
+        $("#item-table").append(record);
+    });
+}
+
+
+//item Add
+$('#item-add').on('click',()=>{
+
+    //item id
+    var itemCode = $('#item-id').val();
+
+    //item name
+    var itemName = $('#item-name').val();
+
+    //item price
+    var itemPrice = $('#item-price').val();
+
+    //item qty
+    var itemQty = $('#item-qty').val();
+
+
+    console.log("itemId :",itemCode);
+    console.log("itemName :",itemName);
+    console.log("itemPrice :",itemPrice);
+    console.log("itemQty :",itemQty);
+
+
+    // create an object
+    let item = {
+        Id: itemCode,
+        Name: itemName,
+        Price: itemPrice,
+        Qty: itemQty
+
+    }
+    // push to the array
+    items.push(item);
+
+    loadTable();
+    $("#item-reset").click();
+
+
+});
+
+//item update
+$("#item-update").on('click', () => {
+    var itemCode = $('#item-id').val();
+    var itemName = $('#item-name').val();
+    var itemPrice = $('#item-price').val();
+    var itemQty = $('#item-qty').val();
+
+
+    let itemObj = items[recordIndex];
+    // let itemObj = {...items[recordIndex]}; // clone object
+    itemObj.Id = itemCode;
+    itemObj.Name = itemName;
+    itemObj.Price = itemPrice;
+    itemObj.Qty = itemQty;
+
+    loadTable();import {Item} from "../model/item";
+    import {getAllItem} from "../db/db";
+    const itemDb = 'ITEMDATA';
+    class ItemController {
+        constructor() {
+            $('#manageItem .buttons button').eq(0).click(this.addItem.bind(this));
+            $('#manageItem .buttons button').eq(1).click(this.searchItem.bind(this));
+            $('#manageItem .buttons button').eq(2).click(this.updateItem.bind(this));
+            $('#manageItem .buttons button').eq(3).click(this.deleteItem.bind(this));
+            getAllItems();
+        }
+        addItem() {
+            let boolean = this.validate();
+            if (!boolean) {
+                alert('Fill All With Valid Details');
+                return
+            }
+            let item = this.collectData()
+            item._itemCode = 0;
+            let st = {
+                url: "http://localhost:8080/item",
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                timeout: 0,
+                data: JSON.stringify(item).replaceAll("_", "")
+            };
+            $.ajax(st).done((resp) => {
+                getAllItems()
+                ob.clearFields()
+                alert("Item Added Success ( ID:" + resp.itemCode + ")");
+            })
+        }
+        updateItem() {
+            let boolean = this.validate(1);
+            if (!boolean) {
+                alert('Fill All With Valid Details');
+                return
+            }
+            let item = this.collectData();
+            let setting = {
+                url: "http://localhost:8080/item",
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                data: JSON.stringify(item).replaceAll("_", ""),
+                timeout: 0,
+                statusCode: {
+                    402: function () {
+                        alert("Update Fail,You Cannot change ID provide Your Existing Id For Do Update Operation")
+                    }
+                }
+            }
+
+            $.ajax(setting).done((resp) => {
+                getAllItems()
+                ob.clearFields()
+                alert("Item Update Success")
+            })
+
+        }
+        searchItem() {
+            let code = $('#itemCode').val();
+            if (!code) {
+                alert('Input ID');
+                return
+            }
+            let setting = {
+                url: "http://localhost:8080/item?itemCode=" + code,
+                method: "GET",
+                timeout: 0,
+                statusCode: {
+                    402: function () {
+                        alert("Customer Not Found")
+                    }
+                }
+            }
+            $.ajax(setting).done((resp) => {
+                $('#itemName').val(resp.itemName)
+                $('#itemPrice').val(resp.itemPrice)
+                $('#itemQty').val(resp.itemQty)
+            });
+        }
+
+        clearFields(){
+            $('#itemCode').val("");
+            $('#itemName').val("");
+            $('#itemPrice').val("");
+            $('#itemQty').val("");
+        }
+
+        deleteItem() {
+            let boolean = this.validate(1);
+            if (!boolean) {
+                alert('Insert ID And Search First');
+                return
+            }
+            let item = this.collectData();
+            let setting = {
+                url: "http://localhost:8080/item?itemCode=" + item._itemCode,
+                method: "DELETE",
+                timeout: 0,
+                statusCode: {
+                    402: function () {
+                        alert("Delete Operation Failed")
+                    }
+                }
+            }
+            $.ajax(setting).done((resp) => {
+                getAllItems()
+                ob.clearFields()
+                alert("Deleted Success")
+            })
+        }
+
+        collectData() {
+            return new Item($('#itemCode').val(), $('#itemName').val(), $('#itemPrice').val(), $('#itemQty').val());
+        }
+
+        validate(op) {
+            let item = this.collectData();
+            if (op === 1)
+                return !item._itemCode ? false : !item._itemName ? false : !item._itemPrice ? false : !item._itemQty ? false : true;
+            return !item._itemName ? false : !item._itemPrice ? false : !item._itemQty ? false : true;
+        }
+
+
+    }
+
+    var ob = new ItemController();
+
+    export function setTable(){
+        $('#manageItem tbody').children().remove()
+        let allItem = getAllItem();
+        $.each(allItem,((i,e)=>{
+            let tr = `<tr><td>${e._itemCode}</td><td>${e._itemName}</td><td>${e._itemPrice}</td><td>${e._itemQty}</td></tr>`;
+            $('#manageItem tbody').append(tr)
+        }))
+    }
+
+    export function getAllItems() {
+        let setting = {
+            url: "http://localhost:8080/item?type=all?",
+            method: 'GET',
+            timeout: 0
+        };
+        try {
+            $.ajax(setting).done((resp) => {
+                let item_arr = [];
+                $.each(resp, (i, e) => {
+
+                        item_arr.push(new Item(e.itemCode, e.itemName, e.itemPrice, e.itemQty))
+                    }
+                );
+                localStorage.setItem(itemDb,JSON.stringify(item_arr));
+
+            }).always(function(jqXHR, textStatus) {
+                setTable()
+            });
+        }catch (e) {
+            console.log(e.toString())
+            setTable();
+        }
+
+    }
+    $("#item-reset").click();
+});
+
+//item Delete
+$("#item-delete").on('click', () => {
+    items.splice(recordIndex, 1);
+    loadTable();
+    $("#item-reset").click();
+});
+
+
+$("#item-table").on('click', 'tr', function() {
+    let index = $(this).index();
+    recordIndex = index;
+
+    console.log("index: ", index);
+
+    let id = $(this).find(".item-code-value").text();
+    let name = $(this).find(".item-name-value").text();
+    let price = $(this).find(".item-price-value").text();
+    let qty = $(this).find(".item-qty-value").text();
+
+
+    $("#item-id").val(id);
+    $("#item-name").val(name);
+    $("#item-price").val(price);
+    $("#item-qty").val(qty);
+
+
+})
+
+
