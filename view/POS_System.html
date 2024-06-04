@@ -567,6 +567,17 @@
 <!--Manage Customer-->
 <div id="manageCustomer">
     <div class="container shadow-lg">
+        <section id="customer_search_section">
+            <div class="col-md-6 mx-auto">
+                <input type="text" class="form-control" id="customer_search_box" placeholder="Search with id, name or address..">
+                <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                    <table class="table table-info table-sm table-hover table-borderless">
+                        <tbody id="customer_search_tbl_body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+        
         <div class="row">
             <div class="col-5">
                 <div class="textFields">
@@ -604,7 +615,7 @@
                     <button class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
                 </div>
             </div>
-            <div class="col-6" style=" height: 411px;overflow: overlay">
+            <div class="col-6" style=" height: 411px;overflow:hidden">
                 <div class="mt-5">
                     <table class="table table-dark table-hover">
                         <thead class="tableHead">
@@ -636,6 +647,16 @@
 <!--Manage Item-->
 <div id="manageItem">
     <div class="container shadow-lg">
+        <section id="item_search_section">
+            <div class="col-md-6 mx-auto">
+                <input type="text" class="form-control" id="item_search_box" placeholder="Search with code or description..">
+                <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                    <table class="table table-info table-sm table-hover table-borderless">
+                        <tbody id="item_search_tbl_body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
         <div class="row">
             <div class="col-5">
                 <div class="textFields ">
@@ -664,7 +685,7 @@
                     <button class="button" style="--clr:#8A2BE2"><span>DELETE</span><i></i></button>
                 </div>
             </div>
-            <div class="col-6" style="height: 411px;overflow: overlay">
+            <div class="col-6" style="height: 411px;overflow:hidden">
                 <div class="mt-5">
                     <table class="table table-dark table-hover">
                         <thead>
@@ -833,7 +854,7 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="../assert/lib/jquery-3.7.1.js"></script>
+<script src="../assert/lib/jquery-3.7.1.min.js"></script>
 <script type="module" src="../model/customer.js"></script>
 <script type="module" src="../model/item.js"></script>
 <script type="module" src="../controller/customerController.js"></script>
