@@ -1,18 +1,16 @@
-export class Customer{
-    constructor(id,name,address,mobileNo,birthday,gen) {
-        this._id = id;
+export class Customer {
+    constructor(customer_id, name, address, salary) {
+        this._customer_id = customer_id;
         this._name = name;
         this._address = address;
-        this._mobileNo = mobileNo;
-        this._birthday = birthday;
-        this._gen=gen;
+        this._salary = salary;
     }
-    get id() {
-        return this._id;
+    get customer_id() {
+        return this._customer_id;
     }
 
-    set id(value) {
-        this._id = value;
+    set customer_id(value) {
+        this._customer_id = value;
     }
 
     get name() {
@@ -31,33 +29,13 @@ export class Customer{
         this._address = value;
     }
 
-    get mobileNo() {
-        return this._mobileNo;
+    get salary() {
+        return this._salary;
     }
 
-    set mobileNo(value) {
-        this._mobileNo = value;
+    set salary(value) {
+        this._salary = value;
     }
+   
 
-    get birthday() {
-        return this._birthday;
-    }
-
-    set birthday(value) {
-        this._birthday = value;
-    }
-
-
-    get gen() {
-        return this._gen;
-    }
-
-    set gen(value) {
-        this._gen = value;
-    }
-
-    toString(){
-        return 'id : '+this._id+' Name : '+this._name+' address : '+this._address+' contact : '
-            +this._mobileNo+' birthday : '+this._birthday+' : '+this._gen
-    }
 }

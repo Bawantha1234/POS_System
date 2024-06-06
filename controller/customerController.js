@@ -1,4 +1,4 @@
-import {Customer} from "../model/customer";
+import {Customer} from "../model/Customer.js";
 import {customer_db} from "../db/db.js";
 
 const customerDb = 'CUSTOMERDATA';
