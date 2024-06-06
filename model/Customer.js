@@ -5,6 +5,7 @@ export class Customer {
         this._address = address;
         this._salary = salary;
     }
+
     get customer_id() {
         return this._customer_id;
     }
@@ -36,6 +37,5 @@ export class Customer {
     set salary(value) {
         this._salary = value;
     }
-   
 
 }
