@@ -1,5 +1,5 @@
-const itemDb = "ITEMDATA"
-const customerDb = "CUSTOMERDATA"
+
+export var customer_db = [];
 
 export function searchItem(id){
     let item = localStorage.getItem(itemDb);
