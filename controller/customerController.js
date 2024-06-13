@@ -1,84 +1,228 @@
-import { Customer } from "../model/Customer.js";
-import { customer_db } from "../db/db.js";
+import { customerModel } from '../model/Customer.js';
 
-const customerIdPattern = /^[C]-\d{4}$/;
-const namePattern = /^[a-zA-Z '.-]{4,}$/;
-const addressPattern = /^[a-zA-Z0-9 ',.-]{5,}$/;
-const salaryPattern = /^(?:[1-9]\d{0,5})(?:\.\d{1,2})?$/;
+$(document).ready(function () {
+    loadTable();
+    populateCustomerDropdown();
 
-let row_index = null;
-
-// Function to check if a customer ID already exists
-function isAvailableID(customer_id) {
-    return customer_db.some(customer => customer.customer_id === customer_id);
-}
-
-// Function to show error messages
-function showError(message) {
-    Swal.fire({
-        width: '225px',
-        position: 'center',
-        icon: 'error',
-        title: 'Error!',
-        text: message,
-        showConfirmButton: false,
-        timer: 2000
+    $('#customer-save').on('click', function () {
+        saveCustomer();
     });
-}
 
-// Function to load customer data into the table (implement this as needed)
-function loadCustomerData() {
-    // Add your code to load customer data here
-}
+    $('#customer-update').on('click', function () {
+        updateCustomer();
+    });
 
-// Save customer
-$("#customer_btns>button[type='button']").eq(0).on("click", () => {
-    let customer_id = $("#customer_id").val();
-    let name = $("#customer_name").val();
-    let address = $("#customer_address").val();
-    let salary = $("#customer_salary").val();
-    if(customer_id && name && address && salary) {
-        if (customerIdPattern.test(customer_id)) {
-            if(!isAvailableID(customer_id)) {
-                if (namePattern.test(name)) {
-                    if (addressPattern.test(address)) {
-                        if (salaryPattern.test(salary)) {
-                            let customer_obj = new Customer(customer_id, name, address, salary);
-                            customer_db.push(customer_obj);
-                            $("#customer_btns>button[type='button']").eq(3).click();
-                            loadCustomerData();
-                            Swal.fire({
-                                width: '225px',
-                                position: 'center',
-                                icon: 'success',
-                                title: 'Saved!',
-                                showConfirmButton: false,
-                                timer: 2000
-                            });
-                        } else { showError('Invalid salary input!'); }
-                    } else { showError('Invalid address input!'); }
-                } else { showError('Invalid name input!'); }
-            } else { showError('This ID already exists!'); }
-        } else { showError('Invalid customer ID format!'); }
-    } else { showError('Fields cannot be empty!'); }
-});
+    $('#customer-delete').on('click', function () {
+        deleteCustomer();
+    });
 
-// Search customer
-$('#customer_search_box').on('input', () => {
-    let search_term = $('#customer_search_box').val();
-    if(search_term){
-        $('#customer_search_tbl_body').empty();
-        let results = customer_db.filter((customer) =>
-            customer.customer_id.toLowerCase().startsWith(search_term.toLowerCase()) ||
-            customer.name.toLowerCase().startsWith(search_term.toLowerCase()) ||
-            customer.address.toLowerCase().startsWith(search_term.toLowerCase())
-        );
-        results.map((customer, index) => {
-            let record = `<tr><td class="customer_id">${customer.customer_id}</td><td class="name">${customer.name}</td>
-                          <td class="address">${customer.address}</td><td class="salary">${customer.salary}</td></tr>`;
-            $("#customer_search_tbl_body").append(record);
+    $('#customer-reset').on('click', function () {
+        resetForm();
+    });
+
+    $('#customer_search_box').on('keyup', function () {
+        searchCustomer();
+    });
+
+    $('#close-search').on('click', function () {
+        $('#customer_search_section').hide();
+    });
+
+    function searchCustomer() {
+        const searchId = $('#customer_search_box').val().trim().toUpperCase();
+        if (searchId === '') {
+            return;
+        }
+
+        const customer = customerModel.getCustomerById(searchId);
+        if (customer) {
+            populateForm(customer);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Customer ID not found. Please enter a correct customer ID.'
+            });
+        }
+    }
+
+    function loadTable() {
+        const customers = customerModel.getAllCustomers();
+        let rows = '';
+        customers.forEach(customer => {
+            rows += `
+                <tr data-id="${customer.id}">
+                    <td>${customer.id}</td>
+                    <td>${customer.name}</td>
+                    <td>${customer.address}</td>
+                    <td>${customer.salary}</td>
+                </tr>
+            `;
         });
-    } else {
-        $('#customer_search_tbl_body').empty();
+        $('#customer_tbl_body').html(rows);
+
+        // Add click event to table rows
+        $('#customer_tbl_body tr').on('click', function () {
+            const id = $(this).data('id');
+            const customer = customerModel.getCustomerById(id);
+            if (customer) {
+                populateForm(customer);
+            }
+        });
+    }
+
+    function saveCustomer() {
+        const id = $('#customer_id').val().trim().toUpperCase();
+        const name = $('#customer_name').val().trim();
+        const address = $('#customer_address').val().trim();
+        const salary = parseFloat($('#customer_salary').val().trim());
+
+        if (!id || !name || !address || !salary) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Information',
+                text: 'Please fill in all fields.'
+            });
+            return;
+        }
+
+        if (!/^C\d{3}$/.test(id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid ID',
+                text: 'Customer ID should start with "C" followed by 3 digits.'
+            });
+            return;
+        }
+
+        if (customerModel.getCustomerById(id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate ID',
+                text: 'Customer ID already exists. Please enter a unique ID.'
+            });
+            return;
+        }
+
+        const newCustomer = { id, name, address, salary };
+        customerModel.addCustomer(newCustomer);
+        loadTable();
+        populateCustomerDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Customer Saved',
+            text: 'Customer has been saved successfully.'
+        });
+    }
+
+    function updateCustomer() {
+        const id = $('#customer_id').val().trim().toUpperCase();
+        const name = $('#customer_name').val().trim();
+        const address = $('#customer_address').val().trim();
+        const salary = parseFloat($('#customer_salary').val().trim());
+
+        if (!id || !name || !address || !salary) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Information',
+                text: 'Please fill in all fields.'
+            });
+            return;
+        }
+
+        const customer = customerModel.getCustomerById(id);
+        if (!customer) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Customer ID not found. Please enter a correct customer ID.'
+            });
+            return;
+        }
+
+        const updatedCustomer = { id, name, address, salary };
+        customerModel.updateCustomer(updatedCustomer);
+        loadTable();
+        populateCustomerDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Customer Updated',
+            text: 'Customer has been updated successfully.'
+        });
+    }
+
+    function deleteCustomer() {
+        const id = $('#customer_id').val().trim().toUpperCase();
+
+        if (!id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Information',
+                text: 'Please enter a customer ID.'
+            });
+            return;
+        }
+
+        const customer = customerModel.getCustomerById(id);
+        if (!customer) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Customer ID not found. Please enter a correct customer ID.'
+            });
+            return;
+        }
+
+        customerModel.deleteCustomer(id);
+        loadTable();
+        populateCustomerDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Customer Deleted',
+            text: 'Customer has been deleted successfully.'
+        });
+    }
+
+    function resetForm() {
+        $('#customer_id').val('');
+        $('#customer_name').val('');
+        $('#customer_address').val('');
+        $('#customer_salary').val('');
+    }
+
+    function populateForm(customer) {
+        $('#customer_id').val(customer.id);
+        $('#customer_name').val(customer.name);
+        $('#customer_address').val(customer.address);
+        $('#customer_salary').val(customer.salary);
+    }
+
+    function populateCustomerDropdown() {
+        const customers = customerModel.getAllCustomers();
+        let dropdownItems = '';
+        customers.forEach(customer => {
+            dropdownItems += `
+                <li><a class="dropdown-item" href="#">${customer.id}</a></li>
+            `;
+        });
+        $('#customer_search_dropdown').html(dropdownItems);
+
+        $('.dropdown-item').on('click', function () {
+            const selectedId = $(this).text();
+            $('#customer_search_box').val(selectedId);
+            searchCustomer();
+        });
     }
 });
+function populateForm(customer) {
+    $('#customer_id').val(customer.id);
+    $('#customer_name').val(customer.name);
+    $('#customer_address').val(customer.address);
+    $('#customer_salary').val(customer.salary);
+
+    // Save customer ID to local storage
+    localStorage.setItem('selectedCustomerId', customer.id);
+}

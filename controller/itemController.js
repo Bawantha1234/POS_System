@@ -1,270 +1,255 @@
+import { itemModel } from '../model/Item.js';
 
+$(document).ready(function () {
+    loadTable();
+    populateItemDropdown();
 
-var items =[];
-var recordIndex;
-
-function loadTable() {
-
-    $("#item-table").empty();
-
-    items.map((item, index) => {
-        let record = `<tr>
-                <td class="item-code-value">${item.Id}</td>
-                <td class="item-name-value">${item.Name}</td>
-                <td class="item-price-value">${item.Price}</td>
-                <td class="item-qty-value">${item.Qty}</td>
-            </tr>`;
-        $("#item-table").append(record);
+    $('#item-save').on('click', function () {
+        saveItem();
     });
-}
 
+    $('#item-update').on('click', function () {
+        updateItem();
+    });
 
-//item Add
-$('#item-add').on('click',()=>{
+    $('#item-delete').on('click', function () {
+        deleteItem();
+    });
 
-    //item id
-    var itemCode = $('#item-id').val();
+    $('#item-reset').on('click', function () {
+        resetForm();
+    });
 
-    //item name
-    var itemName = $('#item-name').val();
+    $('#item_search_box').on('keyup', function () {
+        filterDropdown();
+    });
 
-    //item price
-    var itemPrice = $('#item-price').val();
+    $('#item_search_dropdown').on('click', '.dropdown-item', function () {
+        const selectedId = $(this).text();
+        $('#item_search_box').val(selectedId);
+        searchItemById(selectedId);
+    });
 
-    //item qty
-    var itemQty = $('#item-qty').val();
-
-
-    console.log("itemId :",itemCode);
-    console.log("itemName :",itemName);
-    console.log("itemPrice :",itemPrice);
-    console.log("itemQty :",itemQty);
-
-
-    // create an object
-    let item = {
-        Id: itemCode,
-        Name: itemName,
-        Price: itemPrice,
-        Qty: itemQty
-
-    }
-    // push to the array
-    items.push(item);
-
-    loadTable();
-    $("#item-reset").click();
-
-
-});
-
-//item update
-$("#item-update").on('click', () => {
-    var itemCode = $('#item-id').val();
-    var itemName = $('#item-name').val();
-    var itemPrice = $('#item-price').val();
-    var itemQty = $('#item-qty').val();
-
-
-    let itemObj = items[recordIndex];
-    // let itemObj = {...items[recordIndex]}; // clone object
-    itemObj.Id = itemCode;
-    itemObj.Name = itemName;
-    itemObj.Price = itemPrice;
-    itemObj.Qty = itemQty;
-
-    loadTable();import {Item} from "../model/item";
-    import {getAllItem} from "../db/db";
-    const itemDb = 'ITEMDATA';
-    class ItemController {
-        constructor() {
-            $('#manageItem .buttons button').eq(0).click(this.addItem.bind(this));
-            $('#manageItem .buttons button').eq(1).click(this.searchItem.bind(this));
-            $('#manageItem .buttons button').eq(2).click(this.updateItem.bind(this));
-            $('#manageItem .buttons button').eq(3).click(this.deleteItem.bind(this));
-            getAllItems();
-        }
-        addItem() {
-            let boolean = this.validate();
-            if (!boolean) {
-                alert('Fill All With Valid Details');
-                return
-            }
-            let item = this.collectData()
-            item._itemCode = 0;
-            let st = {
-                url: "http://localhost:8080/item",
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                timeout: 0,
-                data: JSON.stringify(item).replaceAll("_", "")
-            };
-            $.ajax(st).done((resp) => {
-                getAllItems()
-                ob.clearFields()
-                alert("Item Added Success ( ID:" + resp.itemCode + ")");
-            })
-        }
-        updateItem() {
-            let boolean = this.validate(1);
-            if (!boolean) {
-                alert('Fill All With Valid Details');
-                return
-            }
-            let item = this.collectData();
-            let setting = {
-                url: "http://localhost:8080/item",
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                data: JSON.stringify(item).replaceAll("_", ""),
-                timeout: 0,
-                statusCode: {
-                    402: function () {
-                        alert("Update Fail,You Cannot change ID provide Your Existing Id For Do Update Operation")
-                    }
-                }
-            }
-
-            $.ajax(setting).done((resp) => {
-                getAllItems()
-                ob.clearFields()
-                alert("Item Update Success")
-            })
-
-        }
-        searchItem() {
-            let code = $('#itemCode').val();
-            if (!code) {
-                alert('Input ID');
-                return
-            }
-            let setting = {
-                url: "http://localhost:8080/item?itemCode=" + code,
-                method: "GET",
-                timeout: 0,
-                statusCode: {
-                    402: function () {
-                        alert("Customer Not Found")
-                    }
-                }
-            }
-            $.ajax(setting).done((resp) => {
-                $('#itemName').val(resp.itemName)
-                $('#itemPrice').val(resp.itemPrice)
-                $('#itemQty').val(resp.itemQty)
+    function searchItemById(searchId) {
+        const item = itemModel.getItemById(searchId.toUpperCase());
+        if (item) {
+            populateForm(item);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Item ID not found. Please enter a correct item ID.'
             });
         }
-
-        clearFields(){
-            $('#itemCode').val("");
-            $('#itemName').val("");
-            $('#itemPrice').val("");
-            $('#itemQty').val("");
-        }
-
-        deleteItem() {
-            let boolean = this.validate(1);
-            if (!boolean) {
-                alert('Insert ID And Search First');
-                return
-            }
-            let item = this.collectData();
-            let setting = {
-                url: "http://localhost:8080/item?itemCode=" + item._itemCode,
-                method: "DELETE",
-                timeout: 0,
-                statusCode: {
-                    402: function () {
-                        alert("Delete Operation Failed")
-                    }
-                }
-            }
-            $.ajax(setting).done((resp) => {
-                getAllItems()
-                ob.clearFields()
-                alert("Deleted Success")
-            })
-        }
-
-        collectData() {
-            return new Item($('#itemCode').val(), $('#itemName').val(), $('#itemPrice').val(), $('#itemQty').val());
-        }
-
-        validate(op) {
-            let item = this.collectData();
-            if (op === 1)
-                return !item._itemCode ? false : !item._itemName ? false : !item._itemPrice ? false : !item._itemQty ? false : true;
-            return !item._itemName ? false : !item._itemPrice ? false : !item._itemQty ? false : true;
-        }
-
-
     }
 
-    var ob = new ItemController();
+    function loadTable() {
+        const items = itemModel.getAllItems();
+        let rows = '';
+        items.forEach(item => {
+            rows += `
+                <tr data-id="${item.id}">
+                    <td>${item.id}</td>
+                    <td>${item.name}</td>
+                    <td>${item.price}</td>
+                    <td>${item.qty}</td>
+                </tr>
+            `;
+        });
+        $('#item_tbl_body').html(rows);
 
-    export function setTable(){
-        $('#manageItem tbody').children().remove()
-        let allItem = getAllItem();
-        $.each(allItem,((i,e)=>{
-            let tr = `<tr><td>${e._itemCode}</td><td>${e._itemName}</td><td>${e._itemPrice}</td><td>${e._itemQty}</td></tr>`;
-            $('#manageItem tbody').append(tr)
-        }))
+        // Add click event to table rows
+        $('#item_tbl_body tr').on('click', function () {
+            const id = $(this).data('id');
+            const item = itemModel.getItemById(id);
+            if (item) {
+                populateForm(item);
+            }
+        });
     }
 
-    export function getAllItems() {
-        let setting = {
-            url: "http://localhost:8080/item?type=all?",
-            method: 'GET',
-            timeout: 0
-        };
-        try {
-            $.ajax(setting).done((resp) => {
-                let item_arr = [];
-                $.each(resp, (i, e) => {
+    function validateItem(id, name, price, qty, isUpdate = false) {
+        const idRegex = /^I\d{3}$/;
+        const nameRegex = /^[A-Za-z\s]+$/;
+        const priceRegex = /^\d+(\.\d{1,2})?$/;
+        const qtyRegex = /^\d+$/;
 
-                        item_arr.push(new Item(e.itemCode, e.itemName, e.itemPrice, e.itemQty))
-                    }
-                );
-                localStorage.setItem(itemDb,JSON.stringify(item_arr));
-
-            }).always(function(jqXHR, textStatus) {
-                setTable()
+        if (!id || !idRegex.test(id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid ID',
+                text: 'Item ID must start with "I" followed by 3 digits and must be unique.'
             });
-        }catch (e) {
-            console.log(e.toString())
-            setTable();
+            return false;
         }
 
+        if (!isUpdate && itemModel.getItemById(id)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Duplicate ID',
+                text: 'Item ID already exists. Please enter a unique ID.'
+            });
+            return false;
+        }
+
+        if (!name || !nameRegex.test(name)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Name',
+                text: 'Item name must contain only letters.'
+            });
+            return false;
+        }
+
+        if (!price || !priceRegex.test(price)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Price',
+                text: 'Price must be a positive number.'
+            });
+            return false;
+        }
+
+        if (!qty || !qtyRegex.test(qty)) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Quantity',
+                text: 'Quantity must be a positive integer.'
+            });
+            return false;
+        }
+
+        return true;
     }
-    $("#item-reset").click();
+
+    function saveItem() {
+        const id = $('#item_id').val().trim().toUpperCase();
+        const name = $('#item_name').val().trim();
+        const price = $('#item_price').val().trim();
+        const qty = $('#item_qty').val().trim();
+
+        if (!validateItem(id, name, price, qty)) {
+            return;
+        }
+
+        const newItem = { id, name, price: parseFloat(price), qty: parseInt(qty) };
+        itemModel.addItem(newItem);
+        loadTable();
+        populateItemDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Item Saved',
+            text: 'Item has been saved successfully.'
+        });
+    }
+
+    function updateItem() {
+        const id = $('#item_id').val().trim().toUpperCase();
+        const name = $('#item_name').val().trim();
+        const price = $('#item_price').val().trim();
+        const qty = $('#item_qty').val().trim();
+
+        if (!validateItem(id, name, price, qty, true)) {
+            return;
+        }
+
+        const item = itemModel.getItemById(id);
+        if (!item) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Item ID not found. Please enter a correct item ID.'
+            });
+            return;
+        }
+
+        const updatedItem = { id, name, price: parseFloat(price), qty: parseInt(qty) };
+        itemModel.updateItem(updatedItem);
+        loadTable();
+        populateItemDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Item Updated',
+            text: 'Item has been updated successfully.'
+        });
+    }
+
+    function deleteItem() {
+        const id = $('#item_id').val().trim().toUpperCase();
+
+        if (!id) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Missing Information',
+                text: 'Please enter an item ID.'
+            });
+            return;
+        }
+
+        const item = itemModel.getItemById(id);
+        if (!item) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Not Found',
+                text: 'Item ID not found. Please enter a correct item ID.'
+            });
+            return;
+        }
+
+        itemModel.deleteItem(id);
+        loadTable();
+        populateItemDropdown();
+        resetForm();
+        Swal.fire({
+            icon: 'success',
+            title: 'Item Deleted',
+            text: 'Item has been deleted successfully.'
+        });
+    }
+
+    function resetForm() {
+        $('#item_id').val('');
+        $('#item_name').val('');
+        $('#item_price').val('');
+        $('#item_qty').val('');
+    }
+
+    function populateForm(item) {
+        $('#item_id').val(item.id);
+        $('#item_name').val(item.name);
+        $('#item_price').val(item.price);
+        $('#item_qty').val(item.qty);
+    }
+
+    function populateItemDropdown() {
+        const items = itemModel.getAllItems();
+        let dropdownItems = '';
+        items.forEach(item => {
+            dropdownItems += `
+                <li><a class="dropdown-item" href="#">${item.id}</a></li>
+            `;
+        });
+        $('#item_search_dropdown').html(dropdownItems);
+
+        $('.dropdown-item').on('click', function () {
+            const selectedId = $(this).text();
+            $('#item_search_box').val(selectedId);
+            searchItemById(selectedId);
+        });
+    }
+
+    function filterDropdown() {
+        const searchText = $('#item_search_box').val().toUpperCase();
+        const items = itemModel.getAllItems();
+        let filteredItems = items.filter(item => item.id.includes(searchText));
+        let dropdownItems = '';
+        filteredItems.forEach(item => {
+            dropdownItems += `
+                <li><a class="dropdown-item" href="#">${item.id}</a></li>
+            `;
+        });
+        $('#item_search_dropdown').html(dropdownItems);
+    }
 });
-
-//item Delete
-$("#item-delete").on('click', () => {
-    items.splice(recordIndex, 1);
-    loadTable();
-    $("#item-reset").click();
-});
-
-
-$("#item-table").on('click', 'tr', function() {
-    let index = $(this).index();
-    recordIndex = index;
-
-    console.log("index: ", index);
-
-    let id = $(this).find(".item-code-value").text();
-    let name = $(this).find(".item-name-value").text();
-    let price = $(this).find(".item-price-value").text();
-    let qty = $(this).find(".item-qty-value").text();
-
-
-    $("#item-id").val(id);
-    $("#item-name").val(name);
-    $("#item-price").val(price);
-    $("#item-qty").val(qty);
-
-
-})
-
-
