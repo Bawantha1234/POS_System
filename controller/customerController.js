@@ -1,228 +1,161 @@
-import { customerModel } from '../model/Customer.js';
+import {Customer} from "../model/CustomerModel.js";
+import {customer_db} from "../db/db.js";
 
-$(document).ready(function () {
-    loadTable();
-    populateCustomerDropdown();
 
-    $('#customer-save').on('click', function () {
-        saveCustomer();
+
+
+
+
+const customerIdPattern = /^[C]\d{3}$/;
+const namePattern = /^[a-zA-Z '.-]{4,}$/;
+const addressPattern = /^[a-zA-Z0-9 ',.-]{5,}$/;
+const salaryPattern = /^(?:[1-9]\d{0,5})(?:\.\d{1,2})?$/;
+let row_index = null;
+
+const loadCustomerData = () => {
+    $('#customer_tbl_body').empty();
+    customer_db.map((customer, index) => {
+        let record = `<tr><td class="customer_id">${customer.customer_id}</td><td class="name">${customer.name}</td>
+                      <td class="address">${customer.address}</td><td class="salary">${customer.salary}</td></tr>`;
+        $("#customer_tbl_body").append(record);
     });
+};
 
-    $('#customer-update').on('click', function () {
-        updateCustomer();
+function isAvailableID(customer_id) {
+    let customer = customer_db.find(customer => customer.customer_id === customer_id);
+    return !!customer;
+}
+
+// toastr error message
+function showError(message) {
+    toastr.error(message, 'Oops...', {
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-center",
+        "timeOut": "2500"
     });
+}
 
-    $('#customer-delete').on('click', function () {
-        deleteCustomer();
-    });
 
-    $('#customer-reset').on('click', function () {
-        resetForm();
-    });
+// save customer
+$("#customer_btns>button[type='button']").eq(0).on("click", () => {
+    let customer_id = $("#customer_id").val();
+    let name = $("#customer_name").val();
+    let address = $("#customer_address").val();
+    let salary = $("#customer_salary").val();
+    if(customer_id && name && address && salary) {
+        if (customerIdPattern.test(customer_id)) {
+            if(!isAvailableID(customer_id)) {
+                if (namePattern.test(name)) {
+                    if (addressPattern.test(address)) {
+                        if (salaryPattern.test(salary)) {
+                            let customer_obj = new Customer(customer_id, name, address, salary);
+                            customer_db.push(customer_obj);
+                            $("#customer_btns>button[type='button']").eq(3).click();
+                            loadCustomerData();
+                            Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Saved!', showConfirmButton: false, timer: 2000});
+                        } else { showError('Invalid salary input!'); }
+                    } else { showError('Invalid address input!'); }
+                } else { showError('Invalid name input!'); }
+            } else { showError('This ID is already exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Fields can not be empty!'); }
+});
 
-    $('#customer_search_box').on('keyup', function () {
-        searchCustomer();
-    });
+// update customer
+$("#customer_btns>button[type='button']").eq(1).on("click", () => {
+    let customer_id = $("#customer_id").val();
+    let name = $("#customer_name").val();
+    let address = $("#customer_address").val();
+    let salary = $("#customer_salary").val();
+    if(customer_id && name && address && salary) {
+        if (customerIdPattern.test(customer_id)) {
+            if(isAvailableID(customer_id)) {
+                if (namePattern.test(name)) {
+                    if (addressPattern.test(address)) {
+                        if (salaryPattern.test(salary)) {
+                            let customer_obj = new Customer(customer_id, name, address, salary);
+                            let index = customer_db.findIndex(customer => customer.customer_id === customer_id);
+                            customer_db[index] = customer_obj;
+                            $("#customer_btns>button[type='button']").eq(3).click();
+                            loadCustomerData();
+                            Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Updated!', showConfirmButton: false, timer: 2000});
+                        } else { showError('Invalid salary input!'); }
+                    } else { showError('Invalid address input!'); }
+                } else { showError('Invalid name input!'); }
+            } else { showError('This ID is not exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Fields can not be empty!'); }
+});
 
-    $('#close-search').on('click', function () {
-        $('#customer_search_section').hide();
-    });
+// delete customer
+$("#customer_btns>button[type='button']").eq(2).on("click", () => {
+    let customer_id = $("#customer_id").val();
+    if(customer_id){
+        if (customerIdPattern.test(customer_id)) {
+            if(isAvailableID(customer_id)) {
+                Swal.fire({width: '300px', title: 'Delete Customer', text: "Are you sure you want to permanently remove this customer?", icon: 'warning',
+                    showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'Yes, delete!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        let index = customer_db.findIndex(customer => customer.customer_id === customer_id);
+                        customer_db.splice(index, 1);
+                        $("#customer_btns>button[type='button']").eq(3).click();
+                        loadCustomerData();
+                        Swal.fire({width: '225px', position: 'center', icon: 'success', title: 'Deleted!', showConfirmButton: false, timer: 2000});
+                    }
+                });
+            } else { showError('This ID is not exist!'); }
+        } else { showError('Invalid customer ID format!'); }
+    } else { showError('Customer ID can not be empty!'); }
+});
 
-    function searchCustomer() {
-        const searchId = $('#customer_search_box').val().trim().toUpperCase();
-        if (searchId === '') {
-            return;
-        }
-
-        const customer = customerModel.getCustomerById(searchId);
-        if (customer) {
-            populateForm(customer);
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Not Found',
-                text: 'Customer ID not found. Please enter a correct customer ID.'
-            });
-        }
-    }
-
-    function loadTable() {
-        const customers = customerModel.getAllCustomers();
-        let rows = '';
-        customers.forEach(customer => {
-            rows += `
-                <tr data-id="${customer.id}">
-                    <td>${customer.id}</td>
-                    <td>${customer.name}</td>
-                    <td>${customer.address}</td>
-                    <td>${customer.salary}</td>
-                </tr>
-            `;
-        });
-        $('#customer_tbl_body').html(rows);
-
-        // Add click event to table rows
-        $('#customer_tbl_body tr').on('click', function () {
-            const id = $(this).data('id');
-            const customer = customerModel.getCustomerById(id);
-            if (customer) {
-                populateForm(customer);
-            }
-        });
-    }
-
-    function saveCustomer() {
-        const id = $('#customer_id').val().trim().toUpperCase();
-        const name = $('#customer_name').val().trim();
-        const address = $('#customer_address').val().trim();
-        const salary = parseFloat($('#customer_salary').val().trim());
-
-        if (!id || !name || !address || !salary) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Missing Information',
-                text: 'Please fill in all fields.'
-            });
-            return;
-        }
-
-        if (!/^C\d{3}$/.test(id)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Invalid ID',
-                text: 'Customer ID should start with "C" followed by 3 digits.'
-            });
-            return;
-        }
-
-        if (customerModel.getCustomerById(id)) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Duplicate ID',
-                text: 'Customer ID already exists. Please enter a unique ID.'
-            });
-            return;
-        }
-
-        const newCustomer = { id, name, address, salary };
-        customerModel.addCustomer(newCustomer);
-        loadTable();
-        populateCustomerDropdown();
-        resetForm();
-        Swal.fire({
-            icon: 'success',
-            title: 'Customer Saved',
-            text: 'Customer has been saved successfully.'
-        });
-    }
-
-    function updateCustomer() {
-        const id = $('#customer_id').val().trim().toUpperCase();
-        const name = $('#customer_name').val().trim();
-        const address = $('#customer_address').val().trim();
-        const salary = parseFloat($('#customer_salary').val().trim());
-
-        if (!id || !name || !address || !salary) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Missing Information',
-                text: 'Please fill in all fields.'
-            });
-            return;
-        }
-
-        const customer = customerModel.getCustomerById(id);
-        if (!customer) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Not Found',
-                text: 'Customer ID not found. Please enter a correct customer ID.'
-            });
-            return;
-        }
-
-        const updatedCustomer = { id, name, address, salary };
-        customerModel.updateCustomer(updatedCustomer);
-        loadTable();
-        populateCustomerDropdown();
-        resetForm();
-        Swal.fire({
-            icon: 'success',
-            title: 'Customer Updated',
-            text: 'Customer has been updated successfully.'
-        });
-    }
-
-    function deleteCustomer() {
-        const id = $('#customer_id').val().trim().toUpperCase();
-
-        if (!id) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Missing Information',
-                text: 'Please enter a customer ID.'
-            });
-            return;
-        }
-
-        const customer = customerModel.getCustomerById(id);
-        if (!customer) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Not Found',
-                text: 'Customer ID not found. Please enter a correct customer ID.'
-            });
-            return;
-        }
-
-        customerModel.deleteCustomer(id);
-        loadTable();
-        populateCustomerDropdown();
-        resetForm();
-        Swal.fire({
-            icon: 'success',
-            title: 'Customer Deleted',
-            text: 'Customer has been deleted successfully.'
-        });
-    }
-
-    function resetForm() {
-        $('#customer_id').val('');
-        $('#customer_name').val('');
-        $('#customer_address').val('');
-        $('#customer_salary').val('');
-    }
-
-    function populateForm(customer) {
-        $('#customer_id').val(customer.id);
-        $('#customer_name').val(customer.name);
-        $('#customer_address').val(customer.address);
-        $('#customer_salary').val(customer.salary);
-    }
-
-    function populateCustomerDropdown() {
-        const customers = customerModel.getAllCustomers();
-        let dropdownItems = '';
-        customers.forEach(customer => {
-            dropdownItems += `
-                <li><a class="dropdown-item" href="#">${customer.id}</a></li>
-            `;
-        });
-        $('#customer_search_dropdown').html(dropdownItems);
-
-        $('.dropdown-item').on('click', function () {
-            const selectedId = $(this).text();
-            $('#customer_search_box').val(selectedId);
-            searchCustomer();
-        });
+// reset form
+$("#customer_btns>button[type='button']").eq(3).on("click", () => {
+    $("#customer_name").val("");
+    $("#customer_address").val("");
+    $("#customer_salary").val("");
+    $('#customer_search_tbl_body').empty();
+    customer_db.sort((a, b) => a.customer_id.localeCompare(b.customer_id));
+    if (customer_db.length === 0) { $("#customer_id").val("C001"); }
+    else{
+        const last = customer_db[customer_db.length - 1];
+        const lastIdNumber = parseInt(last.customer_id.slice(2), 10);
+        const nextIdNumber = lastIdNumber + 1;
+        const nextId = `C-${nextIdNumber.toString().padStart(4, '0')}`;
+        $("#customer_id").val(nextId);
     }
 });
-function populateForm(customer) {
-    $('#customer_id').val(customer.id);
-    $('#customer_name').val(customer.name);
-    $('#customer_address').val(customer.address);
-    $('#customer_salary').val(customer.salary);
 
-    // Save customer ID to local storage
-    localStorage.setItem('selectedCustomerId', customer.id);
-}
+// retrieve by table click
+$("#customer_tbl_body, #customer_search_tbl_body").on("click", "tr", function() {
+    row_index = $(this).index();
+    let customer_id = $(this).find(".customer_id").text();
+    let name = $(this).find(".name").text();
+    let address = $(this).find(".address").text();
+    let salary = $(this).find(".salary").text();
+    $("#customer_id").val(customer_id);
+    $("#customer_name").val(name);
+    $("#customer_address").val(address);
+    $("#customer_salary").val(salary);
+});
+
+// search customers
+$('#customer_search_box').on('input', () => {
+    let search_term = $('#customer_search_box').val();
+    if(search_term){
+        $('#customer_search_tbl_body').empty();
+        let results = customer_db.filter((customer) =>
+            customer.customer_id.toLowerCase().startsWith(search_term.toLowerCase()) ||
+            customer.name.toLowerCase().startsWith(search_term.toLowerCase()) ||
+            customer.address.startsWith(search_term.toLowerCase()));
+        results.map((customer, index) => {
+            let record = `<tr><td class="customer_id">${customer.customer_id}</td><td class="name">${customer.name}</td>
+                      <td class="address">${customer.address}</td><td class="salary">${customer.salary}</td></tr>`;
+            $("#customer_search_tbl_body").append(record);
+        });
+    }else{
+        $('#customer_search_tbl_body').empty();
+    }
+});
+

@@ -1,33 +1,41 @@
 // model/CustomerModel.js
-import {customers } from '../db/db.js';
-
-class CustomerModel {
-    constructor() {
-        this.customers = customers;
+export class Customer {
+    constructor(customer_id, name, address, salary) {
+        this._customer_id = customer_id;
+        this._name = name;
+        this._address = address;
+        this._salary = salary;
+    }
+    get customer_id() {
+        return this._customer_id;
     }
 
-    addCustomer(customer) {
-        this.customers.push(customer);
+    set customer_id(value) {
+        this._customer_id = value;
     }
 
-    updateCustomer(updatedCustomer) {
-        const index = this.customers.findIndex(customer => customer.id === updatedCustomer.id);
-        if (index !== -1) {
-            this.customers[index] = updatedCustomer;
-        }
+    get name() {
+        return this._name;
     }
 
-    deleteCustomer(customerId) {
-        this.customers = this.customers.filter(customer => customer.id !== customerId);
+    set name(value) {
+        this._name = value;
     }
 
-    getCustomerById(customerId) {
-        return this.customers.find(customer => customer.id === customerId);
+    get address() {
+        return this._address;
     }
 
-    getAllCustomers() {
-        return this.customers;
+    set address(value) {
+        this._address = value;
     }
+
+    get salary() {
+        return this._salary;
+    }
+
+    set salary(value) {
+        this._salary = value;
+    }
+
 }
-
-export const customerModel = new CustomerModel();

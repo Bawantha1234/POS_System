@@ -1,46 +1,39 @@
-export class Item{
-    constructor(itemCode,itemName,itemPrice,itemQty) {
-        this._itemCode = itemCode;
-        this._itemName = itemName;
-        this._itemPrice = itemPrice;
-        this._itemQty = itemQty;
+export class Item {
+    get item_code() {
+        return this._item_code;
     }
 
-
-    get itemCode() {
-        return this._itemCode;
+    set item_code(value) {
+        this._item_code = value;
     }
 
-    set itemCode(value) {
-        this._itemCode = value;
+    get description() {
+        return this._description;
     }
 
-    get itemName() {
-        return this._itemName;
+    set description(value) {
+        this._description = value;
     }
 
-    set itemName(value) {
-        this._itemName = value;
+    get unit_price() {
+        return this._unit_price;
     }
 
-    get itemPrice() {
-        return this._itemPrice;
+    set unit_price(value) {
+        this._unit_price = value;
     }
 
-    set itemPrice(value) {
-        this._itemPrice = value;
+    get qty_on_hand() {
+        return this._qty_on_hand;
     }
 
-    get itemQty() {
-        return this._itemQty;
+    set qty_on_hand(value) {
+        this._qty_on_hand = value;
     }
-
-    set itemQty(value) {
-        this._itemQty = value;
-    }
-
-    toString(){
-        return "ITEM CODE : "+this._itemCode+"ITEM NAME : "+this._itemName+"ITEM PRICE : "+this._itemPrice+
-            "ITEM QTY : "+this._itemQty
+    constructor(item_code, description, unit_price, qty_on_hand) {
+        this._item_code = item_code;
+        this._description = description;
+        this._unit_price = unit_price;
+        this._qty_on_hand = qty_on_hand;
     }
 }
