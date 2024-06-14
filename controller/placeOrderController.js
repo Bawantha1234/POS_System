@@ -66,7 +66,7 @@ function generateNextId() {
     const last = order_db[order_db.length - 1];
     const lastIdNumber = parseInt(last.order_id.slice(2), 10);
     const nextIdNumber = lastIdNumber + 1;
-    return `O-${nextIdNumber.toString().padStart(3, '0')}`;
+    return `O${nextIdNumber.toString().padStart(3, '0')}`;
 }
 
 const loadCustomers = () => {
