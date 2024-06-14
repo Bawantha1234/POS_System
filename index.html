@@ -54,7 +54,7 @@
     <div class="container text-center">
         <div class="row">
             <div class="col">
-                <div class="card">
+                <div class="card" id="customer_search">
 
                 <div class="card-body">
                     <section id="customer_search_section">
@@ -70,7 +70,7 @@
 
                 </div>
             </div>
-                <div class="card main-card">
+                <div class="card main-card" id="customer_Main_card">
 
 
                     <div class="card-body">
@@ -159,25 +159,26 @@
     <div class="container text-center">
         <div class="row">
             <div class="col">
-                <div class="card">
+                <div class="card" id="item_search">
+
+                    <div class="card-body">
+                        <section id="item_search_section">
+                            <div class="col-md-12 mx-auto">
+                                <input type="text" class="form-control" id="item_search_box" placeholder="Search with code or description..">
+                                <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
+                                    <table class="table table-info table-sm table-hover table-borderless">
+                                        <tbody id="item_search_tbl_body"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="card" id="main_item_card">
 
                     <div class="card-body">
                         <div class="container text-center">
-                            <div class="row">
-                                <div class="col">
-                                    <section id="item_search_section">
-                                        <div class="col-md-12 mx-auto">
-                                            <input type="text" class="form-control" id="item_search_box" placeholder="Search with code or description..">
-                                            <div class="col col-xxl-11 col-xl-11 col-lg-11 col-md-11 col-sm-11 col-11 mx-auto">
-                                                <table class="table table-info table-sm table-hover table-borderless">
-                                                    <tbody id="item_search_tbl_body"></tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </section>
-                                </div>
 
-                            </div>
                             <div class="row">
                                 <div class="col">
                                     <div class="card item_card">
@@ -214,7 +215,7 @@
                                     </div>
                                 </div>
 
-                                <div class="card">
+                                <div class="card" id="customer_card_table">
                                     <div class="card-body">
                                         <section id="item_table_section">
                                             <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -251,7 +252,7 @@
     <div class="container text-center">
         <div class="row">
             <div class="col">
-                <div class="card">
+                <div id="order_search" class="card">
 
                     <div class="card-body">
                         <section id="order_search_section">
@@ -272,10 +273,10 @@
         </div>
     </div>
 
-    <div class="container text-center">
+    <div id="order_forms" class="container text-center">
         <div class="row">
             <div class="col">
-                <div class="card">
+                <div id="order_form1" class="card">
                     <div class="card-body">
                         <section id="form1">
                             <h3>Invoice</h3>
@@ -318,7 +319,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div id="order_form2" class="card">
                     <div class="card-body">
                         <section id="form2">
                             <h3>Cart</h3>
@@ -365,7 +366,7 @@
                 </div>
             </div>
             <div class="col">
-                <div class="card">
+                <div id="order_form3" class="card">
                     <div class="card-body">
                         <section id="form3">
                             <h4 id="total">Total : Rs. 0.00</h4>
@@ -393,6 +394,13 @@
             </div>
         </div>
     </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <section id="table_section1">
         <h4>Order Items Table</h4>
         <div class="col col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
@@ -432,9 +440,6 @@
         </div>
     </section>
 </section>
-
-
-
 
 
 <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>

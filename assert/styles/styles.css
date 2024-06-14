@@ -32,3 +32,37 @@ body {
 .item_card{
 
 }
+#order_form1{
+    top:100px;
+    height:500px;
+}
+#order_form2{
+    top:100px;
+    height: 500px;
+}
+#order_form3{
+    top:100px;
+    height: 500px;
+}
+#order_search{
+    top:50px;
+}
+#customer_search{
+    top:50px;
+}
+#customer_Main_card{
+    top:100px;
+}
+#item_search{
+    top:50px;
+}
+#main_item_card{
+    top:100px;
+}
+#customer_card_table{
+    top:200px;
+}
+.item_card{
+    top:40px;
+}
+
