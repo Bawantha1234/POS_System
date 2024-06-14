@@ -119,7 +119,7 @@ $("#item_btns>button[type='button']").eq(3).on("click", () => {
         const last = item_db[item_db.length - 1];
         const lastIdNumber = parseInt(last.item_code.slice(2), 10);
         const nextIdNumber = lastIdNumber + 1;
-        const nextId = `I-${nextIdNumber.toString().padStart(3, '0')}`;
+        const nextId = `I${nextIdNumber.toString().padStart(3, '0')}`;
         $("#item_code").val(nextId);
     }
 });
