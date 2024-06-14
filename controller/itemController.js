@@ -3,7 +3,7 @@ import {item_db} from "../db/db.js";
 
 $
 
-const itemCodePattern = /^[I]-\d{4}$/;
+const itemCodePattern = /^[I]\d{3}$/;
 const descriptionPattern = /^[a-zA-Z0-9 '.-]{4,}$/;
 const pricePattern = /^(?:[1-9]\d{0,4})(?:\.\d{1,2})?$/;
 const qtyPattern = /^(?:0|[1-9]\d{0,4})(?:\.\d{1,2})?$/;
@@ -114,12 +114,12 @@ $("#item_btns>button[type='button']").eq(3).on("click", () => {
     $("#unit_price").val("");
     $("#item_qty").val("");
     item_db.sort((a, b) => a.item_code.localeCompare(b.item_code));
-    if (item_db.length === 0) { $("#item_code").val("I-0001"); }
+    if (item_db.length === 0) { $("#item_code").val("I001"); }
     else{
         const last = item_db[item_db.length - 1];
         const lastIdNumber = parseInt(last.item_code.slice(2), 10);
         const nextIdNumber = lastIdNumber + 1;
-        const nextId = `I-${nextIdNumber.toString().padStart(4, '0')}`;
+        const nextId = `I-${nextIdNumber.toString().padStart(3, '0')}`;
         $("#item_code").val(nextId);
     }
 });
@@ -154,3 +154,6 @@ $('#item_search_box').on('input', () => {
         $('#item_search_tbl_body').empty();
     }
 });
+
+
+// v1 concise & finalize

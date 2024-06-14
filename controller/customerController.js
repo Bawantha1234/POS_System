@@ -95,7 +95,7 @@ $("#customer_btns>button[type='button']").eq(2).on("click", () => {
         if (customerIdPattern.test(customer_id)) {
             if(isAvailableID(customer_id)) {
                 Swal.fire({width: '300px', title: 'Delete Customer', text: "Are you sure you want to permanently remove this customer?", icon: 'warning',
-                    showCancelButton: true, confirmButtonColor: '#3085d6', cancelButtonColor: '#d33', confirmButtonText: 'Yes, delete!'
+                    showCancelButton: true, confirmButtonColor: '#284ba4', cancelButtonColor: '#b2254a', confirmButtonText: 'Yes, delete!'
                 }).then((result) => {
                     if (result.isConfirmed) {
                         let index = customer_db.findIndex(customer => customer.customer_id === customer_id);
@@ -122,7 +122,7 @@ $("#customer_btns>button[type='button']").eq(3).on("click", () => {
         const last = customer_db[customer_db.length - 1];
         const lastIdNumber = parseInt(last.customer_id.slice(2), 10);
         const nextIdNumber = lastIdNumber + 1;
-        const nextId = `C-${nextIdNumber.toString().padStart(4, '0')}`;
+        const nextId = `C${nextIdNumber.toString().padStart(3, '0')}`;
         $("#customer_id").val(nextId);
     }
 });
@@ -159,3 +159,4 @@ $('#customer_search_box').on('input', () => {
     }
 });
 
+// v1 concise & finalize

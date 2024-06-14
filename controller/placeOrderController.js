@@ -34,7 +34,6 @@ const clear_form3 = () => {
     document.getElementById("subTotal").innerHTML = "SubTotal : Rs. 0.00";
 }
 
-$("#order_id").on('keypress' , ()=> { $("#customer_select").focus(); });
 
 // toastr error message
 function showError(message) {
@@ -63,11 +62,11 @@ function isAvailableCode(order_id, item_code) {
 
 function generateNextId() {
     order_db.sort((a, b) => a.order_id.localeCompare(b.order_id));
-    if (order_db.length === 0) { return "O-0001"; }
+    if (order_db.length === 0) { return "O001"; }
     const last = order_db[order_db.length - 1];
     const lastIdNumber = parseInt(last.order_id.slice(2), 10);
     const nextIdNumber = lastIdNumber + 1;
-    return `O-${nextIdNumber.toString().padStart(4, '0')}`;
+    return `O-${nextIdNumber.toString().padStart(3, '0')}`;
 }
 
 const loadCustomers = () => {
@@ -498,3 +497,4 @@ $('#order_search_box').on('input', () => {
     }
 });
 
+// v1 concise & finalize
