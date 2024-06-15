@@ -1,7 +1,7 @@
 import {customer_db, item_db, order_db, order_details_db} from "../db/db.js";
-import {Order} from "../model/OrderModel.js";
+import {Order} from "../model/Order.js";
 import {OrderDetails} from "../model/OrderDetail.js";
-import {Item} from "../model/ItemModel.js";
+import {Item} from "../model/Item.js";
 
 
 

@@ -1,4 +1,4 @@
-import {Customer} from "../model/CustomerModel.js";
+import {Customer} from "../model/Customer.js";
 import {customer_db} from "../db/db.js";
 
 
